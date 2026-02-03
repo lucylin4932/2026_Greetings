@@ -14,8 +14,11 @@ serve(async (req) => {
   try {
     const apiKey = Deno.env.get('DASHSCOPE_API_KEY');
     if (!apiKey) {
-      throw new Error('DASHSCOPE_API_KEY not configured');
+      console.error('DASHSCOPE_API_KEY not configured');
+      throw new Error('API密钥未配置');
     }
+
+    console.log('Calling Alibaba Cloud Qwen API...');
 
     const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
       method: 'POST',
@@ -28,15 +31,7 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `你是一位精通中国传统文化的文学大师，专门创作新春贺词。2026年是农历马年，请创作一条富有文采、朗朗上口的马年新春祝福语。
-
-要求：
-1. 必须包含"马"字或与马相关的成语、典故
-2. 祝福语要有文化内涵，对仗工整
-3. 内容积极向上，适合发给长辈、朋友、同事
-4. 长度控制在50-80字之间
-5. 不要使用emoji或特殊符号
-6. 直接输出贺词内容，不要有任何前缀说明`
+            content: '你是一位精通中国传统文化的文学大师，专门创作新春贺词。2026年是农历马年，请创作一条富有文采、朗朗上口的马年新春祝福语。要求：1.必须包含"马"字或与马相关的成语、典故 2.祝福语要有文化内涵，对仗工整 3.内容积极向上，适合发给长辈、朋友、同事 4.长度控制在50-80字之间 5.不要使用emoji或特殊符号 6.直接输出贺词内容，不要有任何前缀说明'
           },
           {
             role: 'user',
@@ -48,27 +43,31 @@ serve(async (req) => {
       }),
     });
 
-    const data = await response.json();
-    console.log('API Response:', JSON.stringify(data));
+    const responseText = await response.text();
+    console.log('API Response status:', response.status);
+    console.log('API Response body:', responseText);
 
     if (!response.ok) {
-      throw new Error(data.error?.message || 'API request failed');
+      throw new Error(`API返回错误: ${response.status} - ${responseText}`);
     }
 
+    const data = JSON.parse(responseText);
     const greeting = data.choices?.[0]?.message?.content?.trim();
     
     if (!greeting) {
-      throw new Error('No greeting generated');
+      throw new Error('未能生成贺词内容');
     }
+
+    console.log('Generated greeting:', greeting);
 
     return new Response(
       JSON.stringify({ greeting }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error details:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message || '生成贺词失败，请稍后重试' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

@@ -15,13 +15,17 @@ serve(async (req) => {
     const { greeting } = await req.json();
     
     if (!greeting) {
-      throw new Error('Greeting text is required');
+      throw new Error('需要提供贺词内容');
     }
 
     const apiKey = Deno.env.get('DASHSCOPE_API_KEY');
     if (!apiKey) {
-      throw new Error('DASHSCOPE_API_KEY not configured');
+      console.error('DASHSCOPE_API_KEY not configured');
+      throw new Error('API密钥未配置');
     }
+
+    console.log('Creating image generation task...');
+    console.log('Greeting:', greeting);
 
     // 调用通义万相生成图片
     const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis', {
@@ -32,9 +36,9 @@ serve(async (req) => {
         'X-DashScope-Async': 'enable',
       },
       body: JSON.stringify({
-        model: 'wanx2.1-t2i-turbo',
+        model: 'wanx-v1',
         input: {
-          prompt: `中国新年贺卡设计，马年主题，红色和金色为主色调，中国传统剪纸风格，精美的骏马图案，祥云纹饰，灯笼，烟花，福字，春联元素，喜庆吉祥的氛围，高清细腻，适合作为手机壁纸。画面中央留白区域用于放置祝福文字。`,
+          prompt: '中国新年贺卡设计，马年主题，红色和金色为主色调，中国传统剪纸风格，精美的骏马图案，祥云纹饰，灯笼，烟花，福字，春联元素，喜庆吉祥的氛围，高清细腻，适合作为手机壁纸，画面中央留白区域用于放置祝福文字，精美插画风格',
         },
         parameters: {
           size: '720*1280',
@@ -43,14 +47,22 @@ serve(async (req) => {
       }),
     });
 
-    const taskData = await response.json();
-    console.log('Task created:', JSON.stringify(taskData));
+    const responseText = await response.text();
+    console.log('Task creation response status:', response.status);
+    console.log('Task creation response:', responseText);
 
-    if (!response.ok || !taskData.output?.task_id) {
-      throw new Error(taskData.message || 'Failed to create image task');
+    if (!response.ok) {
+      throw new Error(`创建任务失败: ${response.status} - ${responseText}`);
     }
 
-    const taskId = taskData.output.task_id;
+    const taskData = JSON.parse(responseText);
+    const taskId = taskData.output?.task_id;
+
+    if (!taskId) {
+      throw new Error('未能获取任务ID');
+    }
+
+    console.log('Task created with ID:', taskId);
 
     // 轮询等待任务完成
     let imageUrl = null;
@@ -59,28 +71,34 @@ serve(async (req) => {
 
     while (!imageUrl && attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 2000));
+      attempts++;
       
+      console.log(`Checking task status (attempt ${attempts}/${maxAttempts})...`);
+
       const statusResponse = await fetch(`https://dashscope.aliyuncs.com/api/v1/tasks/${taskId}`, {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
         },
       });
 
-      const statusData = await statusResponse.json();
-      console.log('Task status:', JSON.stringify(statusData));
+      const statusText = await statusResponse.text();
+      console.log('Status check response:', statusText);
+
+      const statusData = JSON.parse(statusText);
 
       if (statusData.output?.task_status === 'SUCCEEDED') {
         imageUrl = statusData.output?.results?.[0]?.url;
+        console.log('Image generated successfully:', imageUrl);
         break;
       } else if (statusData.output?.task_status === 'FAILED') {
-        throw new Error(statusData.output?.message || 'Image generation failed');
+        throw new Error(`图片生成失败: ${statusData.output?.message || '未知错误'}`);
       }
 
-      attempts++;
+      console.log('Task status:', statusData.output?.task_status);
     }
 
     if (!imageUrl) {
-      throw new Error('Image generation timeout');
+      throw new Error('图片生成超时，请稍后重试');
     }
 
     return new Response(
@@ -88,9 +106,9 @@ serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error details:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message || '生成图片失败，请稍后重试' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

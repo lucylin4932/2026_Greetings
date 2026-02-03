@@ -19,7 +19,7 @@ const Index = () => {
   const generateGreeting = async () => {
     setIsLoading(true);
     setGreeting("");
-    setImageUrl("");
+    // 不清除imageUrl，保留已生成的图片
 
     try {
       const { data, error } = await supabase.functions.invoke("generate-greeting");
@@ -33,9 +33,10 @@ const Index = () => {
       }
     } catch (error) {
       console.error("Error generating greeting:", error);
+      const errorMessage = error instanceof Error ? error.message : "请稍后再试";
       toast({
         title: "生成失败",
-        description: "请稍后再试",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -53,7 +54,16 @@ const Index = () => {
         body: { greeting },
       });
 
-      if (error) throw error;
+      console.log("Image function response:", { data, error });
+
+      if (error) {
+        console.error("Function error:", error);
+        throw new Error(error.message || "API调用失败");
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
 
       if (data?.imageUrl) {
         setImageUrl(data.imageUrl);
@@ -66,9 +76,10 @@ const Index = () => {
       }
     } catch (error) {
       console.error("Error generating image:", error);
+      const errorMessage = error instanceof Error ? error.message : "请稍后再试";
       toast({
         title: "图片生成失败",
-        description: "请稍后再试",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

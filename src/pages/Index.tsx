@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Sparkles, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Lantern } from "@/components/Lantern";
 import { Firework } from "@/components/Firework";
@@ -10,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [greeting, setGreeting] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -115,6 +117,11 @@ const Index = () => {
     document.body.removeChild(link);
   };
 
+  const resetToHome = () => {
+    setGreeting("");
+    setImageUrl("");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-primary/10 to-background overflow-hidden">
       {/* 烟花效果 */}
@@ -136,6 +143,18 @@ const Index = () => {
 
       {/* 主内容区 */}
       <div className="relative z-20 px-4 py-8 max-w-md mx-auto min-h-screen flex flex-col">
+        {/* 返回按钮 */}
+        <div className="absolute top-4 left-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/")}
+            className="text-foreground hover:bg-secondary/20"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Button>
+        </div>
+
         {/* 标题区 */}
         <header className="text-center pt-16 pb-8">
           {/* 马年图标 */}
@@ -177,6 +196,7 @@ const Index = () => {
               onGenerateImage={generateImage}
               onRegenerate={generateGreeting}
               onDownloadImage={downloadImage}
+              onBackHome={resetToHome}
             />
           ) : (
             /* 初始状态 - 生成按钮 */

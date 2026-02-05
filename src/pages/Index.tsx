@@ -2,9 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Lantern } from "@/components/Lantern";
-import { Firework } from "@/components/Firework";
-import { Horse } from "@/components/Horse";
+import { CloudPattern } from "@/components/CloudPattern";
+import { FluidHorse } from "@/components/FluidHorse";
 import { LoadingAnimation } from "@/components/LoadingAnimation";
 import { GreetingCard } from "@/components/GreetingCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -123,33 +122,19 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-primary/10 to-background overflow-hidden">
-      {/* 烟花效果 */}
-      <Firework />
-
-      {/* 灯笼装饰 */}
-      <div className="fixed top-0 left-4 z-10">
-        <Lantern size="md" delay={0} />
-      </div>
-      <div className="fixed top-0 right-4 z-10">
-        <Lantern size="md" delay={500} />
-      </div>
-      <div className="fixed top-0 left-1/4 z-10 hidden sm:block">
-        <Lantern size="sm" delay={250} />
-      </div>
-      <div className="fixed top-0 right-1/4 z-10 hidden sm:block">
-        <Lantern size="sm" delay={750} />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 relative overflow-hidden">
+      {/* 云纹背景 */}
+      <CloudPattern />
 
       {/* 主内容区 */}
-      <div className="relative z-20 px-4 py-8 max-w-md mx-auto min-h-screen flex flex-col">
+      <div className="relative z-10 px-6 py-8 max-w-lg mx-auto min-h-screen flex flex-col">
         {/* 返回按钮 */}
         <div className="absolute top-4 left-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/")}
-            className="text-foreground hover:bg-secondary/20"
+            className="text-foreground hover:bg-muted rounded-full"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
@@ -157,29 +142,28 @@ const Index = () => {
 
         {/* 标题区 */}
         <header className="text-center pt-16 pb-8">
-          {/* 马年图标 */}
-          <div className="flex justify-center mb-4">
+          {/* 流体马图标 */}
+          <div className="flex justify-center mb-6">
             <div className="relative">
-              <Horse className="text-secondary w-20 h-14 animate-float drop-shadow-lg" />
+              <FluidHorse className="text-primary animate-float drop-shadow-2xl" size="md" />
               <div className="absolute -top-2 -right-2">
-                <Sparkles className="w-6 h-6 text-accent animate-sparkle" />
+                <Sparkles className="w-6 h-6 text-secondary animate-sparkle" />
               </div>
             </div>
           </div>
 
           {/* 主标题 */}
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            <span className="text-secondary">马</span>年大吉
+          <h1 className="text-4xl font-serif font-bold mb-3">
+            <span className="text-primary">策马</span>
+            <span className="text-foreground">新春</span>
           </h1>
-          <p className="text-foreground/80 text-base">
-            2026 新春贺词生成器
-          </p>
-
-          {/* 装饰线 */}
-          <div className="flex items-center justify-center gap-3 mt-4">
-            <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-secondary" />
-            <span className="text-secondary text-xl">福</span>
-            <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-secondary" />
+          
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="h-px w-10 bg-gradient-to-r from-transparent via-primary to-transparent" />
+            <p className="text-muted-foreground text-sm tracking-wider">
+              新春贺词生成
+            </p>
+            <div className="h-px w-10 bg-gradient-to-l from-transparent via-primary to-transparent" />
           </div>
         </header>
 
@@ -200,8 +184,8 @@ const Index = () => {
             />
           ) : (
             /* 初始状态 - 生成按钮 */
-            <div className="text-center space-y-6">
-              <p className="text-foreground/70 text-base leading-relaxed px-4">
+            <div className="text-center space-y-6 w-full max-w-sm">
+              <p className="text-muted-foreground text-sm leading-relaxed px-4">
                 点击下方按钮，AI将为您生成<br/>
                 独一无二的马年新春祝福语
               </p>
@@ -209,17 +193,19 @@ const Index = () => {
               <Button
                 onClick={generateGreeting}
                 size="lg"
-                className="bg-gradient-to-r from-secondary via-accent to-secondary text-secondary-foreground text-lg px-10 py-6 h-auto rounded-full font-bold shadow-xl hover:shadow-2xl transition-all duration-300 animate-pulse-gold"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 h-auto py-6 rounded-2xl font-serif text-lg shadow-2xl shadow-primary/20 transition-all duration-500 hover:scale-[1.02]"
               >
                 <Sparkles className="w-6 h-6 mr-2" />
                 生成贺词
               </Button>
 
               {/* 底部装饰文字 */}
-              <div className="pt-8 space-y-2">
-                <p className="text-foreground/50 text-sm">
-                  龙马精神 · 马到成功 · 一马当先
-                </p>
+              <div className="pt-8">
+                <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground/50">
+                  <span className="tracking-widest">龙马精神</span>
+                  <span className="w-1 h-1 rounded-full bg-secondary/40" />
+                  <span className="tracking-widest">马到成功</span>
+                </div>
               </div>
             </div>
           )}
@@ -227,9 +213,11 @@ const Index = () => {
 
         {/* 底部 */}
         <footer className="text-center py-4">
-          <p className="text-foreground/40 text-xs">
-            祝您新春快乐，万事如意
-          </p>
+          <div className="inline-flex items-center justify-center gap-2 text-xs text-muted-foreground/40">
+            <div className="w-8 h-px bg-gradient-to-r from-transparent to-border" />
+            <span className="tracking-wide">祝您新春快乐</span>
+            <div className="w-8 h-px bg-gradient-to-l from-transparent to-border" />
+          </div>
         </footer>
       </div>
     </div>

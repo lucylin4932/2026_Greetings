@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Sparkles, MessageCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CloudPattern } from "@/components/CloudPattern";
 import { FluidHorse } from "@/components/FluidHorse";
 
 const Home = () => {
@@ -9,8 +8,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 relative overflow-hidden">
-      {/* 云纹背景 */}
-      <CloudPattern />
 
       {/* 主内容区 */}
       <div className="relative z-10 px-6 py-12 max-w-lg mx-auto min-h-screen flex flex-col">

@@ -5,75 +5,77 @@
 
 @layer base {
   :root {
-    /* 新春红金主题 */
-    --background: 0 85% 15%;
-    --foreground: 45 100% 90%;
+    /* 新中式色彩系统 - 策马新春 */
+    /* 宣纸白为主色调 */
+    --background: 45 100% 98%; /* #FFFBF2 宣纸白 */
+    --foreground: 0 20% 20%; /* 深墨色 */
 
-    --card: 0 75% 20%;
-    --card-foreground: 45 100% 95%;
+    --card: 45 100% 99%;
+    --card-foreground: 0 20% 20%;
 
-    --popover: 0 70% 18%;
-    --popover-foreground: 45 100% 95%;
+    --popover: 45 100% 99%;
+    --popover-foreground: 0 20% 20%;
 
-    /* 中国红 */
-    --primary: 0 85% 45%;
-    --primary-foreground: 45 100% 95%;
+    /* 御红 Imperial Red */
+    --primary: 0 65% 51%; /* #D32F2F */
+    --primary-foreground: 45 100% 98%;
 
-    /* 金色 */
-    --secondary: 45 100% 50%;
-    --secondary-foreground: 0 85% 15%;
+    /* 鎏金 Liquid Gold */
+    --secondary: 51 100% 50%; /* #FFD700 */
+    --secondary-foreground: 0 20% 20%;
 
-    --muted: 0 50% 25%;
-    --muted-foreground: 45 50% 70%;
+    --muted: 45 60% 93%;
+    --muted-foreground: 0 10% 45%;
 
     /* 金色高亮 */
-    --accent: 45 100% 60%;
-    --accent-foreground: 0 85% 15%;
+    --accent: 45 100% 60%; /* 更亮的金色 */
+    --accent-foreground: 0 20% 20%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 65% 51%;
+    --destructive-foreground: 45 100% 98%;
 
-    --border: 45 60% 40%;
-    --input: 0 50% 25%;
-    --ring: 45 100% 50%;
+    --border: 0 20% 88%;
+    --input: 0 20% 88%;
+    --ring: 51 100% 50%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
-    /* 新春特殊变量 */
-    --gold: 45 100% 50%;
-    --gold-light: 45 100% 70%;
-    --red-dark: 0 85% 25%;
-    --red-light: 0 80% 55%;
+    /* 新中式特殊变量 */
+    --imperial-red: 0 65% 51%;
+    --liquid-gold: 51 100% 50%;
+    --rice-paper: 45 100% 98%;
+    --ink-black: 0 20% 20%;
+    --gold-shimmer: 45 100% 65%;
   }
 
   .dark {
-    --background: 0 85% 10%;
-    --foreground: 45 100% 90%;
+    --background: 0 20% 12%;
+    --foreground: 45 100% 98%;
 
-    --card: 0 75% 15%;
-    --card-foreground: 45 100% 95%;
+    --card: 0 20% 15%;
+    --card-foreground: 45 100% 98%;
 
-    --popover: 0 70% 12%;
-    --popover-foreground: 45 100% 95%;
+    --popover: 0 20% 12%;
+    --popover-foreground: 45 100% 98%;
 
-    --primary: 0 85% 45%;
-    --primary-foreground: 45 100% 95%;
+    --primary: 0 65% 51%;
+    --primary-foreground: 45 100% 98%;
 
-    --secondary: 45 100% 50%;
-    --secondary-foreground: 0 85% 15%;
+    --secondary: 51 100% 50%;
+    --secondary-foreground: 0 20% 20%;
 
-    --muted: 0 50% 20%;
-    --muted-foreground: 45 50% 60%;
+    --muted: 0 20% 20%;
+    --muted-foreground: 45 50% 70%;
 
     --accent: 45 100% 60%;
-    --accent-foreground: 0 85% 15%;
+    --accent-foreground: 0 20% 12%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 45 100% 98%;
 
-    --border: 45 60% 30%;
-    --input: 0 50% 20%;
-    --ring: 45 100% 50%;
+    --border: 0 20% 25%;
+    --input: 0 20% 25%;
+    --ring: 51 100% 50%;
   }
 }
 
@@ -84,6 +86,14 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Noto Sans SC', sans-serif;
+    font-feature-settings: "kern" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Noto Serif SC', serif;
   }
 }
 
@@ -92,4 +102,35 @@ body,
 #root {
   width: 100%;
   height: 100%;
+}
+
+/* 新中式装饰纹样 */
+.cloud-pattern {
+  background-image: radial-gradient(circle at 20% 50%, hsl(var(--secondary) / 0.03) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 80%, hsl(var(--primary) / 0.03) 0%, transparent 50%);
+}
+
+/* 流体金属质感 */
+.liquid-gold-gradient {
+  background: linear-gradient(135deg, 
+    hsl(var(--liquid-gold)) 0%, 
+    hsl(var(--gold-shimmer)) 50%, 
+    hsl(var(--liquid-gold)) 100%);
+  background-size: 200% 200%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* 呼吸感动效 */
+.breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.05); }
 }

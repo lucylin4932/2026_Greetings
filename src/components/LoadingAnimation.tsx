@@ -1,27 +1,34 @@
-import { FluidHorse } from "./FluidHorse";
+import { Loader2 } from "lucide-react";
 
 export const LoadingAnimation = () => {
   return (
-    <div className="flex flex-col items-center justify-center gap-8 py-12">
-      {/* 流体马动画 */}
+    <div className="flex flex-col items-center justify-center gap-6 py-12 animate-fade-in">
+      {/* 主加载图标 */}
       <div className="relative">
-        <FluidHorse className="text-primary animate-float" size="md" />
+        {/* 旋转的加载器 */}
+        <Loader2 className="w-16 h-16 text-primary animate-spin drop-shadow-lg" />
+        
+        {/* 外圈脉冲效果 */}
+        <div className="absolute inset-0 flex items-center justify-center -z-10">
+          <div className="w-20 h-20 border-2 border-primary/20 rounded-full animate-ping" />
+        </div>
       </div>
-      
+
       {/* 加载文字 */}
-      <div className="flex items-center gap-2">
-        <span className="text-foreground text-base font-light">正在为您撰写马年贺词</span>
-        <span className="flex gap-1">
-          <span className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-          <span className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-          <span className="w-2 h-2 bg-secondary rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-        </span>
+      <div className="text-center space-y-2">
+        <p className="text-lg font-serif text-primary font-bold animate-pulse">
+          正在生成贺词
+        </p>
+        <p className="text-sm text-muted-foreground">
+          请稍候片刻...
+        </p>
       </div>
-      
-      {/* 进度条 */}
-      <div className="w-48 h-1.5 bg-muted rounded-full overflow-hidden">
-        <div className="h-full bg-gradient-to-r from-primary to-secondary animate-shimmer rounded-full w-2/3" 
-             style={{ backgroundSize: '200% 100%' }} />
+
+      {/* 加载点 */}
+      <div className="flex gap-2">
+        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
       </div>
     </div>
   );

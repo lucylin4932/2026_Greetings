@@ -1,13 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { Sparkles, MessageCircle, FileText } from "lucide-react";
+import { MessageCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FluidHorse } from "@/components/FluidHorse";
+import { CloudPattern } from "@/components/CloudPattern";
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 relative overflow-hidden">
+      {/* 云纹背景 */}
+      <CloudPattern />
 
       {/* 主内容区 */}
       <div className="relative z-10 px-6 py-12 max-w-lg mx-auto min-h-screen flex flex-col">
@@ -16,16 +18,6 @@ const Home = () => {
 
         {/* 标题区 */}
         <header className="text-center mb-16">
-          {/* 流体金属马 */}
-          <div className="flex justify-center mb-8">
-            <div className="relative">
-              <FluidHorse className="text-primary animate-float drop-shadow-2xl" size="lg" />
-              <div className="absolute -top-3 -right-3">
-                <Sparkles className="w-7 h-7 text-secondary animate-sparkle" />
-              </div>
-            </div>
-          </div>
-
           {/* 主标题 - 使用衬线字体 */}
           <h1 className="text-5xl md:text-6xl font-bold mb-4 font-serif">
             <span className="text-primary">策马</span>
@@ -66,7 +58,6 @@ const Home = () => {
                   <div className="text-sm opacity-90 font-light">生成专属马年祝福</div>
                 </div>
               </div>
-              <Sparkles className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
             </div>
           </Button>
 
@@ -90,7 +81,6 @@ const Home = () => {
                   <div className="text-sm opacity-70 font-light">测测马年好运气</div>
                 </div>
               </div>
-              <MessageCircle className="w-5 h-5 opacity-50 text-secondary group-hover:opacity-100 transition-opacity" />
             </div>
           </Button>
 

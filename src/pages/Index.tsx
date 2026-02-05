@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FluidHorse } from "@/components/FluidHorse";
+import { CloudPattern } from "@/components/CloudPattern";
 import { LoadingAnimation } from "@/components/LoadingAnimation";
 import { GreetingCard } from "@/components/GreetingCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -122,6 +122,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 relative overflow-hidden">
+      {/* 云纹背景 */}
+      <CloudPattern />
+
       {/* 主内容区 */}
       <div className="relative z-10 px-6 py-8 max-w-lg mx-auto min-h-screen flex flex-col">
         {/* 返回按钮 */}
@@ -138,16 +141,6 @@ const Index = () => {
 
         {/* 标题区 */}
         <header className="text-center pt-16 pb-8">
-          {/* 流体马图标 */}
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <FluidHorse className="text-primary animate-float drop-shadow-2xl" size="md" />
-              <div className="absolute -top-2 -right-2">
-                <Sparkles className="w-6 h-6 text-secondary animate-sparkle" />
-              </div>
-            </div>
-          </div>
-
           {/* 主标题 */}
           <h1 className="text-4xl font-serif font-bold mb-3">
             <span className="text-primary">策马</span>

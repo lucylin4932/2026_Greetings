@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FluidHorse } from "@/components/FluidHorse";
+import { CloudPattern } from "@/components/CloudPattern";
 import { ChatMessage } from "@/components/ChatMessage";
 import { ChatInput } from "@/components/ChatInput";
 import { supabase } from "@/integrations/supabase/client";
@@ -87,6 +87,9 @@ const FortunePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col relative">
+      {/* 云纹背景 */}
+      <CloudPattern />
+
       {/* 头部 */}
       <header className="relative z-20 px-4 py-4 border-b border-border/50 bg-background/95 backdrop-blur-md">
         <div className="max-w-2xl mx-auto flex items-center gap-4">
@@ -99,15 +102,9 @@ const FortunePage = () => {
             <ArrowLeft className="w-5 h-5" />
           </Button>
 
-          <div className="flex items-center gap-3 flex-1">
-            <div className="relative">
-              <FluidHorse className="text-primary w-10 h-7" size="sm" />
-              <Sparkles className="absolute -top-1 -right-1 w-3 h-3 text-secondary animate-sparkle" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold font-serif text-foreground">马年运势大师</h1>
-              <p className="text-xs text-muted-foreground">2026 新春运势预测</p>
-            </div>
+          <div className="flex-1">
+            <h1 className="text-lg font-bold font-serif text-foreground">马年运势大师</h1>
+            <p className="text-xs text-muted-foreground">2026 新春运势预测</p>
           </div>
         </div>
       </header>
